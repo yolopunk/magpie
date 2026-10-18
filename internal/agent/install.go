@@ -86,6 +86,16 @@ var vendorInstall = map[string]func(goos string) []InstallCmd{
 		}
 		return []InstallCmd{{Via: "brew", Command: "brew install gemini-cli"}}
 	},
+	// Nanobot's install scripts (HKUDS/nanobot's README), which need a
+	// Python ≥ 3.11 already on the machine — they only look for one, then
+	// make the venv of their own — and it is published on no npm nor
+	// Homebrew, so there is no cliSpecs entry to update it by
+	"nanobot": func(goos string) []InstallCmd {
+		if goos == "windows" {
+			return []InstallCmd{{Via: "powershell", Command: "irm https://raw.githubusercontent.com/HKUDS/nanobot/main/scripts/install.ps1 | iex"}}
+		}
+		return []InstallCmd{{Via: "script", Command: "curl -fsSL https://raw.githubusercontent.com/HKUDS/nanobot/main/scripts/install.sh | sh"}}
+	},
 }
 
 // installCommands is how to install the agent with the given id on goos:
